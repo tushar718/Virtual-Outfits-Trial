@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Try On</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .catalogue {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .catalogue h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            color: #333;
+        }
+        .filter-bar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .filter-bar button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 5px;
+        }
+        .filter-bar button:hover {
+            background-color: #0056b3;
+        }
+        .item {
+            background: #fff;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+        .item:hover {
+            transform: scale(1.02);
+        }
+        .item img {
+            max-width: 200px;
+            margin-right: 20px;
+            border-radius: 8px;
+        }
+        .item-details {
+            flex-grow: 1;
+        }
+        .item-details h2 {
+            margin: 0 0 10px;
+            font-size: 1.5em;
+            color: #333;
+        }
+        .item-details p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .item-details .price {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #333;
+        }
+        .item .try-on-button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 5px;
+            margin-left: 20px;
+        }
+        .item .try-on-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="catalogue">
+        <h1>Virtual Outfit Trial</h1>
+
+        <div class="filter-bar">
+            <button onclick="filterItems('classic')">Classic Tees</button>
+            <button onclick="filterItems('graphic')">Graphic Tees</button>
+            <button onclick="filterItems('all')">Show All</button>
+        </div>
+
+        <div class="item classic">
+            <img src="Resources/Shirts/black shirt.png" alt="Black T-Shirt">
+            <div class="item-details">
+                <h2>Black Classic T-Shirt</h2>
+                <p><strong>Color:</strong> Black</p>
+                <p><strong>Material:</strong> 100% Cotton</p>
+                <p><strong>Size:</strong> S, M, L, XL</p>
+                <p class="price">₹500</p>
+            </div>
+            <button class="try-on-button" onclick="tryOn('Black Classic T-Shirt')">Try On</button>
+        </div>
+
+        <div class="item classic">
+            <img src="Resources/Shirts/5.png" alt="Grey T-Shirt">
+            <div class="item-details">
+                <h2>Grey Classic T-Shirt</h2>
+                <p><strong>Color:</strong> Grey</p>
+                <p><strong>Material:</strong> 100% Cotton</p>
+                <p><strong>Size:</strong> S, M, L, XL</p>
+                <p class="price">₹500</p>
+            </div>
+            <button class="try-on-button" onclick="tryOn('Grey Classic T-Shirt')">Try On</button>
+        </div>
+
+        <div class="item graphic">
+            <img src="Resources/Shirts/1.png" alt="Green Robotics T-Shirt">
+            <div class="item-details">
+                <h2>Green Robotics T-Shirt</h2>
+                <p><strong>Design:</strong> Robotics</p>
+                <p><strong>Color:</strong> Green</p>
+                <p><strong>Material:</strong> 100% Cotton</p>
+                <p><strong>Size:</strong> S, M, L, XL</p>
+                <p class="price">₹500</p>
+            </div>
+            <button class="try-on-button" onclick="tryOn('Green Robotics T-Shirt')">Try On</button>
+        </div>
+
+        <div class="item graphic">
+            <img src="Resources/Shirts/2.png" alt="Blue Circuit T-Shirt">
+            <div class="item-details">
+                <h2>Blue Circuit T-Shirt</h2>
+                <p><strong>Design:</strong> Circuit Board</p>
+                <p><strong>Color:</strong> Blue</p>
+                <p><strong>Material:</strong> 100% Cotton</p>
+                <p><strong>Size:</strong> S, M, L, XL</p>
+                <p class="price">₹500</p>
+            </div>
+            <button class="try-on-button" onclick="tryOn('Blue Circuit T-Shirt')">Try On</button>
+        </div>
+    </div>
+
+    <script>
+        function filterItems(category) {
+            let items = document.querySelectorAll('.item');
+            items.forEach(item => {
+                if (category === 'all') {
+                    item.style.display = 'flex';
+                } else {
+                    if (item.classList.contains(category)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function tryOn(itemName) {
+            alert(`Trying on: ${itemName}`);
+        }
+    </script>
+</body>
+</html>
+<script>
+    function tryOn(itemName) {
+        fetch('/try-on', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ item_name: itemName })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(`Error: ${data.error}`);
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
